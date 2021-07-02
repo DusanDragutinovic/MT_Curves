@@ -1,0 +1,423 @@
+#Theorem 5.8 gives us the following list of polynomials q(x)
+
+var('x, t')
+List_of_qs = [1, x, x^2, x*(x + 1), x^2 + x + 1, x^3, x^2*(x + 1), (x^2 + x + 1)*x, x^3 + x + 1, x^2*(x + 1)^2, (x^2 + x + 1)^2, (x^2 + x + 1)*x^2, (x^2 + x + 1)*x*(x + 1), (x^3 + x + 1)*x, (x^3 + x^2 + 1)*x, x^4 + x + 1, x^4 + x^3 + 1, (x^2 + x + 1)^2*x, (x^3 + x + 1)*(x^2 + x + 1), (x^3 + x + 1)*x*(x + 1), (x^4 + x + 1)*x, (x^4 + x^3 + x^2 + x + 1)*x, x^5 + x^2 + 1,  x^5 + x^3 + 1,  x^5 + x^3 + x^2 + x + 1, (x^2 + x + 1)^3, (x^3 + x + 1)^2, (x^3 + x + 1)*(x^3 + x^2 + 1), (x^4 + x + 1)*(x^2 + x + 1), x^6 + x + 1, x^6 + x^3 + 1]
+
+#If a polynomial q(x), here named Polq(x), from List_of_qs is of 
+#degree < 5, use the code that follows. Instead of the first line
+#def q1(x): return 1, write def q1(x): return Polq(x).
+
+indicator = 1
+if indicator == 1:
+	var('x, t')
+	def q1(x):
+		return 1
+	rin.<X> = GF(2)[]
+	PGL = []
+	for a in GF(2):
+		for b in GF(2):
+			for c in GF(2):
+				for d in GF(2):
+					A = Matrix(GF(2), [[a,b],[c,d]])
+					if A.det() != 0:
+						PGL.append(A)
+	Gq1 = []                    
+	for A in PGL:
+		f = (A[1, 0]*X + A[1, 1])^6*q1((A[0, 0]*X + A[0, 1])/(A[1, 0]*X + A[1, 1]))
+		if f == q1(X):
+			Gq1.append(A)
+	D12 = []
+	for a0 in range(0, 2):
+		for a1 in range(0, 2):
+			for a2 in range(0, 2):
+				for a3 in range(0, 2):
+					for a4 in range(0, 2):
+						for a5 in range(0, 2):
+							for a6 in range(0, 2):
+								for a7 in range(0, 2):
+									for a8 in range(0, 2):
+										for a9 in range(0, 2):
+											for a10 in range(0, 2):
+												for a11 in range(0, 2):
+													P = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, 1)
+													D12.append(P)
+	for a0 in range(0, 2):
+		for a1 in range(0, 2):
+			for a2 in range(0, 2):
+				for a3 in range(0, 2):
+					for a4 in range(0, 2):
+						for a5 in range(0, 2):
+							for a6 in range(0, 2):
+								for a7 in range(0, 2):
+									for a8 in range(0, 2):
+										for a9 in range(0, 2):
+											for a10 in range(0, 2):
+												P = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, 1, 0)
+												D12.append(P)                                           
+	D6  = []
+	for a0 in range(0, 2):
+		for a1 in range(0, 2):
+			for a2 in range(0, 2):
+				for a3 in range(0, 2):
+					for a4 in range(0, 2):
+						for a5 in range(0, 2):
+							for a6 in range(0, 2):
+								P = (a0, a1, a2, a3, a4, a5, a6)
+								D6.append(P)
+	Qlist = []
+	q = (q1(t) + 0*t).expand()
+	for P in D12:
+		def p1(t):
+			return P[0] + P[1]*t + P[2]*t^2 + P[3]*t^3 + P[4]*t^4 + P[5]*t^5+ P[6]*t^6+ P[7]*t^7 + P[8]*t^8+ P[9]*t^9+ P[10]*t^10+ P[11]*t^11 + P[12]*t^12
+		ri.<X> = GF(2)[]
+		riq = ri(q1(X))
+		p = (p1(t)).expand()
+		rip = ri(p1(X))
+		if gcd(riq, rip.derivative()^2 + riq.derivative()^2*rip) == 1 and (q.degree(t)==6 or (mod(p.coefficient(t^11), 2))^2!=(mod(p.coefficient(t^12), 2))*(mod(q.coefficient(t^5), 2))^2):
+			Qlist.append(P)
+
+	Vqlist = [] 
+	while Qlist != []:
+		P = Qlist[0]
+		Vqlist.append(P)
+		temp = []
+		temp.append(P)
+		for R in D6:
+			def f(t):
+				return (P[0] + P[1]*t + P[2]*t^2 + P[3]*t^3 + P[4]*t^4 + P[5]*t^5+ P[6]*t^6+ P[7]*t^7 + P[8]*t^8+ P[9]*t^9+ P[10]*t^10+ P[11]*t^11 + P[12]*t^12) + q1(t)*(R[0] + R[1]*t + R[2]*t^2 + R[3]*t^3 + R[4]*t^4 + R[5]*t^5 + R[6]*t^6) + (R[0] + R[1]*t + R[2]*t^2 + R[3]*t^3 + R[4]*t^4 + R[5]*t^5 + R[6]*t^6)^2
+			for A in Gq1:
+				var('x')
+				def ge(x):
+					return (ZZ(A[1, 0])*x + ZZ(A[1, 1]))^12*f((ZZ(A[0, 0])*x + ZZ(A[0, 1]))/(ZZ(A[1, 0])*x + ZZ(A[1, 1])))
+				ri.<X> = ZZ[]
+				g = ri(ge(X))
+				Q = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+				li = g.list()
+				for i in range(0, len(li)):
+					Q[i] = mod(li[i], 2)
+				S = tuple(Q)
+				temp.append(S)        
+		A = set(Qlist)
+		B = set(temp)
+		C = A - B
+		Qlist = list(C)
+	HEqlist = []
+	q = q1(t) + 0*t
+	for P in Vqlist:
+		p = P[0] + P[1]*t + P[2]*t^2 + P[3]*t^3 + P[4]*t^4 + P[5]*t^5+ P[6]*t^6+ P[7]*t^7 + P[8]*t^8+ P[9]*t^9+ P[10]*t^10+ P[11]*t^11 + P[12]*t^12
+		HEqlist.append([q, p])
+	print(len(HEqlist), HEqlist)     
+
+#Otherwise, Polq(x) will be of degree 6, and we use the following code
+#where similarly, we change the first line. Namely, we change the line
+#def q1(x): return (x^3 + x + 1)*(x^3 + x^2 + 1) with the following one
+#def q1(x): return Polq(x).
+
+
+indicator = 2
+if indicator == 2:
+	var('x, t')
+	def q1(x):
+		return (x^3 + x + 1)*(x^3 + x^2 + 1)
+	rin.<X> = GF(2)[]
+	PGL = []
+	for a in GF(2):
+		for b in GF(2):
+			for c in GF(2):
+				for d in GF(2):
+					A = Matrix([[a,b],[c,d]])
+					if A.det() != 0:
+						PGL.append(A)
+	Gq1 = []                    
+	for A in PGL:
+		f = (A[1, 0]*X + A[1, 1])^6*q1((A[0, 0]*X + A[0, 1])/(A[1, 0]*X + A[1, 1]))
+		if f == q1(X):
+			Gq1.append(A)
+	D12 = []
+	for a0 in range(0, 2):
+		for a1 in range(0, 2):
+			for a2 in range(0, 2):
+				for a3 in range(0, 2):
+					for a4 in range(0, 2):
+						for a5 in range(0, 2):
+							for a6 in range(0, 2):
+								for a7 in range(0, 2):
+									for a8 in range(0, 2):
+										for a9 in range(0, 2):
+											for a10 in range(0, 2):
+												for a11 in range(0, 2):
+													for a12 in range(0, 2):
+														P = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12)
+														D12.append(P) 
+	A = {(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)}
+	B = set(D12)
+	D12 = list(B - A)
+	D6  = []
+	for a0 in range(0, 2):
+		for a1 in range(0, 2):
+			for a2 in range(0, 2):
+				for a3 in range(0, 2):
+					for a4 in range(0, 2):
+						for a5 in range(0, 2):
+							for a6 in range(0, 2):
+								P = (a0, a1, a2, a3, a4, a5, a6)
+								D6.append(P)
+	Qlist = []
+	q = q1(t).expand() + 0*t
+	for P in D12:
+		def p1(t):
+			return P[0] + P[1]*t + P[2]*t^2 + P[3]*t^3 + P[4]*t^4 + P[5]*t^5+ P[6]*t^6+ P[7]*t^7 + P[8]*t^8+ P[9]*t^9+ P[10]*t^10+ P[11]*t^11 + P[12]*t^12
+		ri.<X> = GF(2)[]
+		riq = ri(q1(X))
+		p = (p1(t)).expand()
+		rip = ri(p1(X))
+		if gcd(riq, rip.derivative()^2 + riq.derivative()^2*rip) == 1 and (q.degree(t)==6 or (mod(p.coefficient(t^11), 2))^2!=(mod(p.coefficient(t^12), 2))*(mod(q.coefficient(t^5), 2))^2):
+			Qlist.append(P)
+	Vqlist = [] 
+	while Qlist != []:
+		P = Qlist[0]
+		Vqlist.append(P)
+		temp = []
+		temp.append(P)
+		for R in D6:
+			def f(t):
+				return (P[0] + P[1]*t + P[2]*t^2 + P[3]*t^3 + P[4]*t^4 + P[5]*t^5+ P[6]*t^6+ P[7]*t^7 + P[8]*t^8+ P[9]*t^9+ P[10]*t^10+ P[11]*t^11 + P[12]*t^12) + q1(t)*(R[0] + R[1]*t + R[2]*t^2 + R[3]*t^3 + R[4]*t^4 + R[5]*t^5 + R[6]*t^6) + (R[0] + R[1]*t + R[2]*t^2 + R[3]*t^3 + R[4]*t^4 + R[5]*t^5 + R[6]*t^6)^2
+			for A in Gq1:
+				var('x')
+				def ge(x):
+					return (ZZ(A[1, 0])*x + ZZ(A[1, 1]))^12*f((ZZ(A[0, 0])*x + ZZ(A[0, 1]))/(ZZ(A[1, 0])*x + ZZ(A[1, 1])))
+				ri.<X> = ZZ[]
+				g = ri(ge(X))
+				Q = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+				li = g.list()
+				for i in range(0, len(li)):
+					Q[i] = mod(li[i], 2)
+				S = tuple(Q)
+				temp.append(S)        
+		A = set(Qlist)
+		B = set(temp)
+		C = A - B
+		Qlist = list(C)
+	HEqlist = []
+	q = q1(t) + 0*t
+	for P in Vqlist:
+		p = P[0] + P[1]*t + P[2]*t^2 + P[3]*t^3 + P[4]*t^4 + P[5]*t^5+ P[6]*t^6+ P[7]*t^7 + P[8]*t^8+ P[9]*t^9+ P[10]*t^10+ P[11]*t^11 + P[12]*t^12
+		HEqlist.append([q, p])
+		
+#Using the previous codes, we determine for all polynomial q(x) in the  
+#lists List_of_qs, the list HEqlist. and we collect all these lists in
+#one named Final_HE_list; moreover, we change the letter t to x in it.
+#Using elements of Final_HE_list, we form the list Equations, of the 
+#affine equations for the hyperelliptic curves of genus 5 over F_2.
+
+var('x, y')
+Equations = []
+for el in Final_HE_list:
+    q = el[0]
+    p = el[1]
+    f = y^2 + q*y + p
+    Equations.append(f)
+	
+#Computing the number of points over finite extensions of F_2	
+	
+rin.< x, y> = GF(2)[]
+var('x, y')
+Numbers = []
+for f in Equations:
+    n1 = 1
+    for a in GF(2):
+        for b in GF(2):
+             if (rin(f(x, y))(a, b) == 0):
+                        n1  = n1 + 1
+    n2 = 1
+    for a in GF(2^2):
+        for b in GF(2^2):
+             if (rin(f(x, y))(a, b) == 0):
+                        n2  = n2 + 1    
+    n3 = 1
+    for a in GF(2^3):
+        for b in GF(2^3):
+             if (rin(f(x, y))(a, b) == 0):
+                        n3  = n3 + 1                      
+    n4 = 1
+    for a in GF(2^4):
+        for b in GF(2^4):
+             if (rin(f(x, y))(a, b) == 0):
+                        n4  = n4 + 1   
+    n5 = 1
+    for a in GF(2^5):
+        for b in GF(2^5):
+             if (rin(f(x, y))(a, b) == 0):
+                        n5  = n5 + 1                     
+    Numbers.append([n1, n2, n3, n4, n5])
+
+#Finding Newton polygons and the supersingular ones. 
+#Printing the first curve with a given Newton polygon.
+
+from sage.geometry.newton_polygon import NewtonPolygon
+sslist = []
+br1 = 1
+br2, br3, br4, br5, br6, br7, br8, br9, br10, br11, br12, br13 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+for k in range(0, len(Numbers)):
+    num = Numbers[k]
+    n1 = num[0]
+    n2 = num[1]
+    n3 = num[2]
+    n4 = num[3]
+    n5 = num[4]
+    N1 = n1 - 3
+    N2 = 1/2*n1^2 - 3*n1 + 1/2*n2 + 2
+    N3 = 1/6*n1^3 - 3/2*n1^2 + 1/2*n1*n2 + 2*n1 - 3/2*n2 + 1/3*n3
+    N4 = 1/24*n1^4 - 1/2*n1^3 + 1/4*n1^2*n2 + n1^2 - 3/2*n1*n2 + 1/8*n2^2 + 1/3*n1*n3 + n2 - n3 + 1/4*n4
+    N5 = 1/120*n1^5 - 1/8*n1^4 + 1/12*n1^3*n2 + 1/3*n1^3 - 3/4*n1^2*n2 + 1/8*n1*n2^2 + 1/6*n1^2*n3 + n1*n2 - 3/8*n2^2 - n1*n3 + 1/6*n2*n3 + 1/4*n1*n4 + 2/3*n3 - 3/4*n4 + 1/5*n5
+    np = [(0, 0), (10, 5)]
+    if valuation(N1, 2)<=1/2:
+        i = 1
+        j = valuation(N1, 2)
+        np.append((i, j))
+        np.append((10 - i, 5 - i + j))
+    if valuation(N2, 2)<=1:
+        i = 2
+        j = valuation(N2, 2)
+        np.append((i, j))
+        np.append((10 - i, 5 - i + j))
+    if valuation(N3, 2)<=3/2:
+        i = 3
+        j = valuation(N3, 2)
+        np.append((i, j))
+        np.append((10 - i, 5 - i + j))
+    if valuation(N4, 2)<=2:
+        i = 4
+        j = valuation(N4, 2)
+        np.append((i, j))
+        np.append((10 - i, 5 - i + j))  
+    if valuation(N5, 2)<=5/2:
+        i = 5
+        j = valuation(N5, 2)
+        np.append((i, j))
+        np.append((10 - i, 5 - i + j))   
+    NP = NewtonPolygon(np)
+    if NP.slopes() == [1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2]:
+        sslist.append(k)
+    if NP.slopes() == [0, 0, 0, 0, 0, 1, 1, 1, 1, 1]:
+        if br2 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br2 = 1
+    if NP.slopes() == [0, 0, 0, 0, 1/2, 1/2, 1, 1, 1, 1]:
+        if br3 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br3 = 1
+    if NP.slopes() == [0, 0, 0, 1/2, 1/2, 1/2, 1/2, 1, 1, 1]:
+        if br4 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br4 = 1 
+    if NP.slopes() == [0, 0, 1/3, 1/3, 1/3, 2/3, 2/3, 2/3, 1, 1]:
+        if br5 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br5 = 1
+    if NP.slopes() == [0, 0, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1, 1]:
+        if br6 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br6 = 1
+    if NP.slopes() == [0, 1/4, 1/4, 1/4, 1/4, 3/4, 3/4, 3/4, 3/4, 1]:
+        if br7 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br7 = 1          
+    if NP.slopes() == [0, 1/3, 1/3, 1/3, 1/2, 1/2, 2/3, 2/3, 2/3, 1]:
+        if br8 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br8 = 1
+    if NP.slopes() == [0, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1/2, 1]:
+        if br9 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br9 = 1
+    if NP.slopes() == [1/5, 1/5, 1/5, 1/5, 1/5, 4/5, 4/5, 4/5, 4/5, 4/5]:
+        if br10 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br10 = 1  
+    if NP.slopes() == [1/4, 1/4, 1/4, 1/4, 1/2, 1/2, 3/4, 3/4, 3/4, 3/4]:
+        if br11 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br11 = 1   
+    if NP.slopes() == [1/3, 1/3, 1/3, 1/2, 1/2, 1/2, 1/2, 2/3, 2/3, 2/3]:
+        if br12 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br12 = 1   
+    if NP.slopes() == [2/5, 2/5, 2/5, 2/5, 2/5, 3/5, 3/5, 3/5, 3/5, 3/5]:
+        if br13 == 0:
+            print(k, NP, NP.slopes())
+            br1 = br1 + 1
+        br13 = 1           
+		
+		
+#Moduli count for the hyperelliptic curves. 
+
+count_check = 1
+if count_check == 1:
+	temp = Final_HE_list.copy()
+	newli = []
+	for el in temp:
+		q1 = el[0] + 0*x
+		p1 = el[1] + 0*x
+		q = q1.expand()
+		p = p1.expand()
+		Q = (q(x = 0), mod(q.coefficient(x), 2), mod(q.coefficient(x^2), 2), mod(q.coefficient(x^3), 2), mod(q.coefficient(x^4), 2), mod(q.coefficient(x^5), 2), mod(q.coefficient(x^6), 2))
+		P = (p(x = 0), mod(p.coefficient(x), 2), mod(p.coefficient(x^2), 2), mod(p.coefficient(x^3), 2), mod(p.coefficient(x^4), 2), mod(p.coefficient(x^5), 2), mod(p.coefficient(x^6), 2), mod(p.coefficient(x^7), 2), mod(p.coefficient(x^8), 2), mod(p.coefficient(x^9), 2), mod(p.coefficient(x^10), 2), mod(p.coefficient(x^11), 2), mod(p.coefficient(x^12), 2))
+		newel = [Q, P]
+		newli.append(newel)
+	
+	#initializing the automorphism data
+	D6  = []
+	PGL = []
+	for a0 in range(0, 2):
+		for a1 in range(0, 2):
+			for a2 in range(0, 2):
+				for a3 in range(0, 2):
+					for a4 in range(0, 2):
+						for a5 in range(0, 2):
+							for a6 in range(0, 2):
+								P = (a0, a1, a2, a3, a4, a5, a6)
+								D6.append(P)
+	for a in GF(2):
+		for b in GF(2):
+			for c in GF(2):
+				for d in GF(2):
+					A = matrix(GF(2), [[a, b],[c, d]])
+					if A.determinant()!=0:
+						PGL.append(A)
+	#check
+	var('x, y')
+	moduli_count = 0
+	for el in newli:
+		Q0 = el[0]
+		P0 = el[1]
+		Q = (GF(2)(Q0[0]), GF(2)(Q0[1]), GF(2)(Q0[2]), GF(2)(Q0[3]), GF(2)(Q0[4]), GF(2)(Q0[5]), GF(2)(Q0[6]))
+		P = (GF(2)(P0[0]), GF(2)(P0[1]), GF(2)(P0[2]), GF(2)(P0[3]), GF(2)(P0[4]), GF(2)(P0[5]), GF(2)(P0[6]),  GF(2)(P0[7]), GF(2)(P0[8]), GF(2)(P0[9]), GF(2)(P0[10]), GF(2)(P0[11]), GF(2)(P0[12]))
+		auto = 0
+		ri.<X, Y> = GF(2)[]
+		f = Y^2 + (Q[0] + Q[1]*X + Q[2]*X^2+ Q[3]*X^3 + Q[4]*X^4+ Q[5]*X^5 + Q[6]*X^6)*Y + P[0] + P[1]*X + P[2]*X^2+ P[3]*X^3 + P[4]*X^4+ P[5]*X^5 + P[6]*X^6 + P[7]*X^7+ P[8]*X^8 + P[9]*X^9+ P[10]*X^10 + P[11]*X^11 + P[12]*X^12
+		for A in PGL:
+			for R in D6:
+				a = A[0, 0]
+				b = A[0, 1]
+				c = A[1, 0]
+				d = A[1, 1]
+				g = ((R[0] + R[1]*X + R[2]*X^2+ R[3]*X^3 + R[4]*X^4+ R[5]*X^5 + R[6]*X^6 + Y)/(c*X + d)^6)^2 + (Q[0] + Q[1]*((a*X + b)/(c*X + d)) + Q[2]*((a*X + b)/(c*X + d))^2+ Q[3]*((a*X + b)/(c*X + d))^3 + Q[4]*((a*X + b)/(c*X + d))^4+ Q[5]*((a*X + b)/(c*X + d))^5 + Q[6]*((a*X + b)/(c*X + d))^6)*((R[0] + R[1]*X + R[2]*X^2+ R[3]*X^3 + R[4]*X^4+ R[5]*X^5 + R[6]*X^6 + Y)/(c*X + d)^6) + P[0] + P[1]*((a*X + b)/(c*X + d)) + P[2]*((a*X + b)/(c*X + d))^2+ P[3]*((a*X + b)/(c*X + d))^3 + P[4]*((a*X + b)/(c*X + d))^4+ P[5]*((a*X + b)/(c*X + d))^5 + P[6]*((a*X + b)/(c*X + d))^6 + P[7]*((a*X + b)/(c*X + d))^7+ P[8]*((a*X + b)/(c*X + d))^8 + P[9]*((a*X + b)/(c*X + d))^9+ P[10]*((a*X + b)/(c*X + d))^10 + P[11]*((a*X + b)/(c*X + d))^11 + P[12]*((a*X + b)/(c*X + d))^12
+				if f == g.numerator():
+					auto = auto + 1
+		moduli_count = moduli_count + 1/auto
+	if moduli_count == 512:
+		print("As expected!")
+#Sage: As expected!

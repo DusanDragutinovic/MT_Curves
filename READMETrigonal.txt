@@ -1,0 +1,4 @@
+In TrigonalCurvesWithAutomorphisms, there is a list of pairs [A, B]. A is a 21-tuple representing a trigonal curve of genus 5 over F_2, while B is its size of the automorphism group. By A = [A[0], A[1], A[2], A[3], A[4], A[5], A[6], A[7], A[8], A[9], A[10], A[11], A[12], A[13], A[14], A[15], A[16], A[17], A[18], A[19], A[20]], we represent the curve:
+
+
+A[0]*X^5 + A[1]*X^4Y + A[2]*X^4Z + A[3]*X^3Y^2 + A[4]*X^3YZ + A[5]*X^3Z^2 + A[6]*X^2Y^3 + A[7]*X^2Y^2Z + A[8]*X^2YZ^2 + A[9]*X^2Z^3 + A[10]*XY^4 + A[11]*XY^3Z + A[12]*XY^2Z^2 + A[13]*XYZ^3 + A[14]*XZ^4 + A[15]*Y^5 + A[16]*Y^4Z + A[17]*Y^3Z^2 +  A[18]*Y^2Z^3  + A[19]*YZ^4  + A[20]*Z^5 = 0
