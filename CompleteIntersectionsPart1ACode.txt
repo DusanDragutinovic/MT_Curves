@@ -1,0 +1,97 @@
+#Let PGL5 be the list of all 5x5 matrices invertible over F_2.
+#Let P14 be the list of all 15-tuples of zeroes and ones without
+#the zero tuple. I.e. as a set P14 = F_2^{15} - {0}.
+
+#We split PGL5 into smaller lists in order to get reasonable computations. 
+
+G_1 = PGL5[0:15]
+G_2 = PGL5[15:50]
+G_3 = PGL5[50:100]
+G_4 = PGL5[100:200]
+G_5 = PGL5[200:400]
+G_6 = PGL5[400:750]
+G_7 = PGL5[750:1200]
+G_8 = PGL5[1200:2000]
+G_9 = PGL5[2000:5000]
+G_10 = PGL5[5000:10000]
+G_11 = PGL5[10000:100000]
+G_12 = PGL5[100000:500000]
+G_13 = PGL5[500000:1000000]
+G_14 = PGL5[1000000:5000000]
+G_15 = PGL5[5000000:9999360]
+ListAfterG_0 = P14.copy()
+
+
+#By changing ListAfterG_{i} to ListAfterG_{i + 1}, and G_{i} to G_{i + 1}
+#we filter the starting list P14, in order to get 15-tuples representing
+#the non-isomorphic curves. We do this 15 times (as much as there are G_{i}s)
+
+
+L = ListAfterG_0.copy()
+ListAfterG_1 = []
+var('x, y, z, t, u')
+teri.<X, Y, Z, T, U> = GF(2)[]
+indi = 0
+while L!=[]:
+    temp = []
+    P = L[0]
+    ListAfterG_1.append(P)
+    temp.append(P)
+    def f(x, y, z, t, u):
+        return P[0]*x^2 + P[1]*x*y + P[2]*x*z + P[3]*x*t + P[4]*x*u + P[5]*y^2 + P[6]*y*z + P[7]*y*t + P[8]*y*u + P[9]*z^2 + P[10]*z*t + P[11]*z*u + P[12]*t^2 + P[13]*t*u + P[14]*u^2
+    for m in G_1:
+        def g(x, y, z, t, u):
+            return f(m[0, 0]*x + m[0, 1]*y + m[0, 2]*z + m[0, 3]*t + m[0, 4]*u, m[1, 0]*x + m[1, 1]*y + m[1, 2]*z + m[1, 3]*t + m[1, 4]*u, m[2, 0]*x + m[2, 1]*y + m[2, 2]*z + m[2, 3]*t + m[2, 4]*u, m[3, 0]*x + m[3, 1]*y + m[3, 2]*z + m[3, 3]*t + m[3, 4]*u, m[4, 0]*x + m[4, 1]*y + m[4, 2]*z + m[4, 3]*t + m[4, 4]*u)
+        h = g(X, Y, Z, T, U)
+        Q = (h.coefficient(X^2), h.coefficient(X*Y), h.coefficient(X*Z), h.coefficient(X*T), h.coefficient(X*U), h.coefficient(Y^2), h.coefficient(Y*Z), h.coefficient(Y*T), h.coefficient(Y*U), h.coefficient(Z^2), h.coefficient(Z*T), h.coefficient(Z*U), h.coefficient(T^2), h.coefficient(T*U), h.coefficient(U^2))
+        temp.append(Q)   
+    A = set(L)
+    B = set(temp)
+    C = A - B
+    L = list(C)
+
+#We ended up with a list of P_{i}s described in the master thesis. 
+#Pre_list_of_Ps =  [(1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0), (1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0), (0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0), (0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0), (1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0)]
+
+#Checking the irreducibility of the polynomials corresponding to the
+#elements of Pre_list_of_Ps as well as the smoothness conditions, we 
+#got the list: list_of_Ps = [(1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0), (0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0), (0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0), (0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0)]
+
+#Computing the Stabilizer of q_{P4} and finding P4_list_of_Qs. Similarly for the others.
+#In particular, we notice that the stabilizers have different cardinalities, so
+#the list_of_Ps truly contains non-isomorphic representatives. 
+
+P = (0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0)
+Stab4 = []
+var('x, y, z, t, u')
+rin.<X, Y, Z, T, U> = GF(2)[]
+indi = 0
+def f(x, y, z, t, u):
+        return P[0]*x^2 + P[1]*x*y + P[2]*x*z + P[3]*x*t + P[4]*x*u + P[5]*y^2 + P[6]*y*z + P[7]*y*t + P[8]*y*u + P[9]*z^2 + P[10]*z*t + P[11]*z*u + P[12]*t^2 + P[13]*t*u + P[14]*u^2
+f1 = f(X, Y, Z, T, U)
+for m in PGL:
+    def g(x, y, z, t, u):
+        return f(m[0, 0]*x + m[0, 1]*y + m[0, 2]*z + m[0, 3]*t + m[0, 4]*u, m[1, 0]*x + m[1, 1]*y + m[1, 2]*z + m[1, 3]*t + m[1, 4]*u, m[2, 0]*x + m[2, 1]*y + m[2, 2]*z + m[2, 3]*t + m[2, 4]*u, m[3, 0]*x + m[3, 1]*y + m[3, 2]*z + m[3, 3]*t + m[3, 4]*u, m[4, 0]*x + m[4, 1]*y + m[4, 2]*z + m[4, 3]*t + m[4, 4]*u)
+    h = g(X, Y, Z, T, U)
+    if h == f1:
+        Stab4.append(m)
+
+L = P14.copy()
+P4_list_of_Qs = []
+while L!=[]:
+    temp = []
+    P = L[0]
+    P4_list_of_Qs.append(P)
+    temp.append(P)
+    def f(x, y, z, t, u):
+        return P[0]*x^2 + P[1]*x*y + P[2]*x*z + P[3]*x*t + P[4]*x*u + P[5]*y^2 + P[6]*y*z + P[7]*y*t + P[8]*y*u + P[9]*z^2 + P[10]*z*t + P[11]*z*u + P[12]*t^2 + P[13]*t*u + P[14]*u^2
+    for m in Stab4:
+        def g(x, y, z, t, u):
+            return f(m[0, 0]*x + m[0, 1]*y + m[0, 2]*z + m[0, 3]*t + m[0, 4]*u, m[1, 0]*x + m[1, 1]*y + m[1, 2]*z + m[1, 3]*t + m[1, 4]*u, m[2, 0]*x + m[2, 1]*y + m[2, 2]*z + m[2, 3]*t + m[2, 4]*u, m[3, 0]*x + m[3, 1]*y + m[3, 2]*z + m[3, 3]*t + m[3, 4]*u, m[4, 0]*x + m[4, 1]*y + m[4, 2]*z + m[4, 3]*t + m[4, 4]*u)
+        h = g(X, Y, Z, T, U)
+        Q = (h.coefficient(X^2), h.coefficient(X*Y), h.coefficient(X*Z), h.coefficient(X*T), h.coefficient(X*U), h.coefficient(Y^2), h.coefficient(Y*Z), h.coefficient(Y*T), h.coefficient(Y*U), h.coefficient(Z^2), h.coefficient(Z*T), h.coefficient(Z*U), h.coefficient(T^2), h.coefficient(T*U), h.coefficient(U^2))
+        temp.append(Q)
+    A = set(L)
+    B = set(temp)
+    C = A - B
+    L = list(C)
