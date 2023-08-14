@@ -1,0 +1,27 @@
+Here, we present an implementation of our algorithm in the case when the first quadric corresponds to a 15-tuple P4. The implementations for other cases of P1, P3, and P6 are similar, where, in the codes, only minor and expected things are modified. 
+
+Note: P6 here is P2 from the paper. 
+
+1. prepare_initial_data.py
+It initializes the data we will use in all the codes and also for each P (here we are only interested in P = P4) and Q in P_list_of_Qs it computes Stab(P)\cap Stab(Q).
+
+2. find_r_candidates.py
+For P = P4 and each Q in P_list_of_Qs, it filters a list of possible third quadrics R. 
+
+3. main_calculation.py
+For P = P4, each Q in P_list_of_Qs and R a quadric obtained from 2, it checks several conditions (e.g. smoothness) we want to have in order of (P, Q, R) to define a non-hyperelliptic non-trigonal genus 5 curve over F_2. A final list of triples (P, Q, R) from this code is the initial one in the following. 
+
+4. compute_isomph_classes.py
+We filter a list of triples (P, Q, R) so that no two of them are pairwise isomorphic over F_2.
+
+5. compute_automorphisms.py
+For elements in the lastly obtained list, we determine their F_2-automorphism groups.
+
+6. dimension_check.py
+We do the last check if all the obtained triples define varieties of dimension one. We did not cover that in main_computation.py.
+
+P4_curves.txt is the final list of all (pairwise non-isomorphic) non-hyperelliptic non-trigonal genus 5 curves over F_2, which lie on a quadric defined by P4. auto_P4_curves.txt is the list of the sizes of the automorphism groups of curves from P4_curves.txt. We obtain them after mentioned six steps. 
+
+File Complete_Intersections.txt contains all non-hyperelliptic non-trigonal genus 5 curves over F_2 up to (F_2-)isomorphism. (In other words, there we collect all elements from P4_curves.txt, P3_curves.txt, P1_curves.txt, and P6_curves.txt.) Files Automorphisms_Complete_Intersections.txt and Pts_Count_Complete_Intersection.txt contain the sizes of automorphism groups data and point counts of F_{2^N}-points (N = 1, 2, 3, 4, 5) for all curves from Complete_Intersections.txt; the i-th elements of these documents correspond to the i-th curve from Complete_Intersections.txt. 
+
+Curves in P4_curves.txt and in Complete_Intersections.txt are given as triples of quadrics, where a quadric is represented using its coefficients for a lexicographic ordering of the monomials of degree two. In other words, we represent a quadric q_P = p_0 X^2 + p_1 XY + p_2 XZ + p_3 XT + p_4 XU + p_5Y^2 + p_6YZ + p_7YT + p_8YU +  p_9Z^2 + p_{10}ZT + p_{11}ZU + p_{12}T^2 + p_{13}TU + p_{14}U^2 using a 15-tuple P = (p_0, p_1, p_2, p_3 , p_4, p_5, p_6, p_7, p_8, p_9, p_{10}, p_{11}, p_{12}, p_{13}, p_{14}). 
